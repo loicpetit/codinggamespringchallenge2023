@@ -1,0 +1,27 @@
+{
+  "name": "codinggamespringchallenge2023",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loicpetit/codinggamespringchallenge2023.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/loicpetit/codinggamespringchallenge2023/issues"
+  },
+  "homepage": "https://github.com/loicpetit/codinggamespringchallenge2023#readme",
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "jasmine": "^5.0.0",
+    "rollup": "^3.23.0"
+  },
+  "scripts": {
+    "build": "rollup --config",
+    "watch": "rollup --config --watch --watch.include src/**",
+    "start": "npm run build && node dist/bundle.js",
+    "test": "npm run build && jasmine --config=jasmine.json"
+  }
+}
