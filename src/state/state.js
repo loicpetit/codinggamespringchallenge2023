@@ -1,5 +1,5 @@
-import Base from './base'
-import Cell from './cell'
+import Base from './base.js'
+import Cell from './cell.js'
 
 class State {
     constructor(
