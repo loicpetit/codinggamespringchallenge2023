@@ -8,6 +8,7 @@ function readBases(
 ) {
     /** @type {Base[]} */
     const bases = []
+    // @ts-ignore
     var inputs = readline().split(' ');
     for(let i = 0; i < nbBases; i++) {
         const baseIndex = parseInt(inputs[i]);
@@ -19,10 +20,12 @@ function readBases(
 }
 
 function readNbBases() {
+    // @ts-ignore
     return parseInt(readline())
 }
 
 function readNbCells() {
+    // @ts-ignore
     return parseInt(readline())
 }
 
@@ -33,6 +36,7 @@ function readInitialCells(
     /** @type {Cell[]} */
     const cells = []
     for(let i = 0; i < nbCells; i++) {
+        // @ts-ignore
         var inputs = readline().split(' ')
         const type = parseInt(inputs[0])
         const resources = parseInt(inputs[1])
@@ -69,6 +73,7 @@ function readTurnCells(
     const cells = []
     for(let i = 0; i < currentCells.length; i++) {
         const currentCell = currentCells[i]
+        // @ts-ignore
         var inputs = readline().split(' ')
         const resources = parseInt(inputs[0])
         const myAnts = parseInt(inputs[1]);
