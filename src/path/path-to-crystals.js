@@ -55,19 +55,21 @@ class PathsToCrystals {
      */
     getFrom(
         /** @type {State} */ state,
-        /** @type {number} */ fromIndex
+        /** @type {number[]} */ ...fromIndexes
     ) {
         /** @type {Path[]} */
         const paths = []
-        if (!state
-            || !state.hasIndex(fromIndex)) {
-            return paths
+        for (const fromIndex of fromIndexes) {
+            if (!state
+                || !state.hasIndex(fromIndex)) {
+                break
+            }
+            const shortestPath = new ShortestPath()
+            const crystalCells = state.getAvailableCrystalCells()
+            for (const cell of crystalCells) {
+                paths.push(shortestPath.find(state, fromIndex, cell.index))
+            }
         }
-        const shortestPath = new ShortestPath()
-        const crystalCells = state.getAvailableCrystalCells()
-        for (const cell of crystalCells) {
-            paths.push(shortestPath.find(state, fromIndex, cell.index))
-        }        
         return paths.sort(comparePathFrom(state))
     }
 }
