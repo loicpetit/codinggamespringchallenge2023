@@ -60,7 +60,7 @@ describe('Fast close slow far strategy', function() {
             opponentBases
         )
         /** create strategy */
-        strategy = new Strategy()
+        strategy = new Strategy(state)
     })
 
     describe('Empty state', function() {

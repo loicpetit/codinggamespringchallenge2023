@@ -6,8 +6,8 @@ class Game {
 
     run() {
         const reader = new StateReader()
-        const strategy = new Strategy()
         reader.readInitialeState()
+        const strategy = new Strategy(reader.getState())
         let turn = 0
         while(true) {
             const turnState = reader.readTurnState().getState();
