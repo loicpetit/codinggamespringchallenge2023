@@ -21,6 +21,55 @@ class State {
         this.opponentBases = opponentBases
     }
 
+    /**
+     * @returns {Cell | undefined} 
+     */
+    getCell(
+        /** @type {number} */ index
+    ) {
+        if (this.hasIndex(index)) {
+            return this.cells[index]
+        }
+        return
+    }
+
+    getNeighboursOf(
+        /** @type {number} */ index
+    ) {
+        /** @type {Cell[]} */
+        const neighbours = []
+        const cell = this.getCell(index)
+        if (!cell) {
+            return neighbours
+        }
+        const right = this.getCell(cell.right)
+        if (right) {
+            neighbours.push(right)
+        }
+        const topRight = this.getCell(cell.topRight)
+        if (topRight) {
+            neighbours.push(topRight)
+        }
+        const topLeft = this.getCell(cell.topLeft)
+        if (topLeft) {
+            neighbours.push(topLeft)
+        }
+        const left = this.getCell(cell.left)
+        if (left) {
+            neighbours.push(left)
+        }
+        const bottomLeft = this.getCell(cell.bottomLeft)
+        if (bottomLeft) {
+            neighbours.push(bottomLeft)
+        }
+        const bottomRight = this.getCell(cell.bottomRight)
+        if (bottomRight) {
+            neighbours.push(bottomRight)
+        }
+
+        return neighbours
+    }
+
     hasIndex(
         /** @type {number | undefined} */ index
     ) {

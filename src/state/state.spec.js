@@ -9,6 +9,93 @@ describe('State', function() {
     /** @type {State} */
     let state
 
+    describe('get cell', function() {
+        beforeEach(function() {
+            state = new State(
+                [
+                    createCellWithIndex(0, 1, -1),
+                    createCellWithIndex(1, 3, 0),
+                    createCellWithIndex(3, 4, 1),
+                    createCellWithIndex(4, -1, 3)
+                ],
+                [],
+                0,
+                4,
+                []
+            )
+        })
+        it('should get cell', function() {
+            expect(state.getCell(1)).withContext('get cell').toBeDefined()
+            expect(state.getCell(1).index).withContext('get cell index').toEqual(1)
+            expect(state.getCell(1).right).withContext('get cell right').toEqual(3)
+            expect(state.getCell(1).left).withContext('get cell left').toEqual(0)
+        })
+        it('should not get cell for undefined', function() {
+            expect(state.getCell(undefined)).toBeUndefined()
+        })
+        it('should not get cell for negative number', function() {
+            expect(state.getCell(-2)).toBeUndefined()
+        })
+        it('should not get cell for too big number', function() {
+            expect(state.getCell(6)).toBeUndefined()
+        })
+        it('should throw error if index value does not math array index', function() {
+            expect(function() {
+                state.getCell(2)
+            }).toThrowError('Unexpected index value 3, expected 2')
+        })
+    })
+
+    describe('get neighbours', function() {
+        beforeEach(function() {
+            state = new State(
+                [
+                    createCellWithIndex(0, 1, -1),
+                    createCellWithIndex(1, 2, 0),
+                    createCellWithIndex(2, 4, 1),
+                    createCellWithIndex(4, -1, 2),
+                    createCellWithIndex(5, -1, -1)
+                ],
+                [],
+                0,
+                5,
+                []
+            )
+        })
+        it('should get neighbours with one neighbour', function() {
+            const neighbours = state.getNeighboursOf(0)
+            expect(neighbours).toBeDefined()
+            expect(neighbours).toHaveSize(1)
+            expect(neighbours[0].index).toEqual(1)
+        })
+        it('should get neighbours with several neighbours', function() {
+            const neighbours = state.getNeighboursOf(1)
+            expect(neighbours).toBeDefined()
+            expect(neighbours).toHaveSize(2)
+            expect(neighbours[0].index).toEqual(2)
+            expect(neighbours[1].index).toEqual(0)
+        })
+        it('should not get neighbours for undefined', function() {
+            expect(state.getNeighboursOf(undefined)).toHaveSize(0)
+        })
+        it('should not get neighbours for negative number', function() {
+            expect(state.getNeighboursOf(-2)).toHaveSize(0)
+        })
+        it('should not get neighbours for too big number', function() {
+            expect(state.getNeighboursOf(6)).toHaveSize(0)
+        })
+        it('should throw error if index value does not math array index', function() {
+            expect(function() {
+                state.getNeighboursOf(3)
+            }).toThrowError('Unexpected index value 4, expected 3')
+        })
+        it('should throw error if index value does not math array index in a neighbour', function() {
+            expect(function() {
+                state.getNeighboursOf(2)
+            }).toThrowError('Unexpected index value 5, expected 4')
+        })
+    })
+
     describe('has index', function() {
         beforeEach(function() {
             state = new State(
@@ -36,7 +123,7 @@ describe('State', function() {
         it('should not find index for too big number', function() {
             expect(state.hasIndex(6)).toBeFalse()
         })
-        it('should thorw error if index value does not math array index', function() {
+        it('should throw error if index value does not math array index', function() {
             expect(function() {
                 state.hasIndex(2)
             }).toThrowError('Unexpected index value 3, expected 2')
