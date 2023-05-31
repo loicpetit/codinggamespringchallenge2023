@@ -44,6 +44,7 @@ describe('Fast close slow far strategy', function() {
             new Cell(29, 0,  0, 0,  0,  19, 27, -1, -1, 22, -1),
             new Cell(30, 0,  0, 0,  0,  -1, 21, -1, 20, 28, -1)
         ]
+        const crystals = [17, 18, 21, 22]
         const myBases = [
             new Base(1)
         ]
@@ -52,6 +53,7 @@ describe('Fast close slow far strategy', function() {
         ]
         state = new State(
             cells,
+            crystals,
             myBases,
             myBases.length,
             cells.length,
@@ -64,6 +66,7 @@ describe('Fast close slow far strategy', function() {
     describe('Empty state', function() {
         beforeEach(function() {
             state = new State(
+                [],
                 [],
                 [],
                 0,

@@ -5,6 +5,8 @@ class State {
     constructor(
         /** @type {Cell[]} */
         cells,
+        /** @type {number[]} */
+        crystals,
         /** @type {Base[]} */
         myBases,
         /** @type {number} */
@@ -15,11 +17,30 @@ class State {
         opponentBases
     ) {
         this.cells = cells ?? []
+        this.crystals = crystals ?? []
         this.myBases = myBases ?? []
         this.nbBases = nbBases ?? 0
         this.nbCells = nbCells ?? 0
         this.opponentBases = opponentBases ?? []
     }
+
+    getAvailableCrystalCells() {
+        /** @type {Cell[]} */
+        const crystalCells = []
+        for (const index of this.crystals) {
+            const cell = this.getCell(index)
+            if (!cell) {
+                throw new Error('Crystals index ' + index + ' does not exist')
+            }
+            if (!cell.hasCrystals()) {
+                throw new Error('Crystals are expected at index ' + index)
+            }
+            if (cell.resources > 0) {
+                crystalCells.push(cell)
+            }
+        }
+        return crystalCells
+    }   
 
     /**
      * @returns {Cell | undefined} 

@@ -13,8 +13,16 @@ class StateBuilder {
     opponentBases = []
     
     build() {
+        /** @type {number[]} */
+        const crystals = []
+        for (const cell of this.cells) {
+            if (cell && cell.hasCrystals()) {
+                crystals.push(cell.index)
+            }
+        }
         return new State(
             this.cells,
+            crystals,
             this.myBases,
             this.nbBases,
             this.nbCells,

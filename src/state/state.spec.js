@@ -9,6 +9,50 @@ describe('State', function() {
     /** @type {State} */
     let state
 
+    describe('get available crystal cells', function() {
+        beforeEach(function() {
+            state = new State(
+                [
+                    new Cell(0, 0, 0, 0, 0, 1, 2, -1, -1, -1, -1),
+                    new Cell(1, 10, 2, 0, 0, -1, 3, -1, 0, -1, -1),
+                    new Cell(2, 10, 2, 0, 0, 3, -1, -1, -1, 0, -1),
+                    new Cell(3, 0, 0, 0, 0, -1, -1, -1, 2, 1, -1)
+                ],
+                [1,2],
+                [],
+                0,
+                4,
+                []
+            )
+        })
+        it('should get the cells', function() {
+            const cells = state.getAvailableCrystalCells()
+            expect(cells).toBeDefined()
+            expect(cells).toHaveSize(2)
+            expect(cells[0].index).toEqual(1)
+            expect(cells[1].index).toEqual(2)
+        })
+        it('should get the cells with resources', function() {
+            state.cells[1].resources = 0
+            const cells = state.getAvailableCrystalCells()
+            expect(cells).toBeDefined()
+            expect(cells).toHaveSize(1)
+            expect(cells[0].index).toEqual(2)
+        })
+        it('should throw error if the crystal cell does not exist', function() {
+            state.crystals.push(10)
+            expect(function() {
+                state.getAvailableCrystalCells()
+            }).toThrowError('Crystals index 10 does not exist')
+        })
+        it('should throw error if the crystal cell doesnt have the good type', function() {
+            state.cells[1].type = 1
+            expect(function() {
+                state.getAvailableCrystalCells()
+            }).toThrowError('Crystals are expected at index 1')
+        })
+    })
+
     describe('get cell', function() {
         beforeEach(function() {
             state = new State(
@@ -18,6 +62,7 @@ describe('State', function() {
                     createCellWithIndex(3, 4, 1),
                     createCellWithIndex(4, -1, 3)
                 ],
+                [],
                 [],
                 0,
                 4,
@@ -56,6 +101,7 @@ describe('State', function() {
                     createCellWithIndex(4, -1, 2),
                     createCellWithIndex(5, -1, -1)
                 ],
+                [],
                 [],
                 0,
                 5,
@@ -105,6 +151,7 @@ describe('State', function() {
                     createCellWithIndex(3, 4, 1),
                     createCellWithIndex(4, -1, 3)
                 ],
+                [],
                 [],
                 0,
                 4,
