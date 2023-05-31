@@ -14,11 +14,11 @@ class State {
         /** @type {Base[]} */
         opponentBases
     ) {
-        this.cells = cells
-        this.myBases = myBases
-        this.nbBases = nbBases
-        this.nbCells = nbCells
-        this.opponentBases = opponentBases
+        this.cells = cells ?? []
+        this.myBases = myBases ?? []
+        this.nbBases = nbBases ?? 0
+        this.nbCells = nbCells ?? 0
+        this.opponentBases = opponentBases ?? []
     }
 
     /**
