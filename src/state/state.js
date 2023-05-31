@@ -32,10 +32,10 @@ class State {
             if (!cell) {
                 throw new Error('Crystals index ' + index + ' does not exist')
             }
-            if (!cell.hasCrystals()) {
+            if (!cell.isCrystals()) {
                 throw new Error('Crystals are expected at index ' + index)
             }
-            if (cell.resources > 0) {
+            if (cell.hasCrystals()) {
                 crystalCells.push(cell)
             }
         }

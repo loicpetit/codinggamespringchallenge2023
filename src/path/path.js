@@ -6,6 +6,8 @@ class Path {
         this.indexes = indexes ?? []
     }
 
+    get length() { return this.indexes?.length ?? 0 }
+
     /**
      * @returns {number | undefined}
      */

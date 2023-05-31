@@ -34,18 +34,26 @@ class Cell {
         this.left = left >= 0 ? left : undefined
         this.bottomLeft = bottomLeft >= 0 ? bottomLeft : undefined
         this.bottomRight = bottomRight >= 0 ? bottomRight : undefined
-    }
+    }    
 
     hasCrystals() {
+        return this.isCrystals() && this.resources > 0
+    }  
+
+    hasEggs() {
+        return this.isEggs() && this.resources > 0
+    }
+
+    isCrystals() {
         return this.type === 2
     }
 
-    hasEggs() {
+    isEggs() {
         return this.type === 1
     }
 
     isEmpty() {
-        return !this.hasCrystals() && !this.hasEggs()
+        return !this.isCrystals() && !this.isEggs()
     }
 }
 

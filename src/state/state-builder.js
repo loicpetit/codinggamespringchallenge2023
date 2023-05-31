@@ -16,7 +16,7 @@ class StateBuilder {
         /** @type {number[]} */
         const crystals = []
         for (const cell of this.cells) {
-            if (cell && cell.hasCrystals()) {
+            if (cell && cell.isCrystals()) {
                 crystals.push(cell.index)
             }
         }
