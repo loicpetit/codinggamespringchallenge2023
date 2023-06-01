@@ -48,4 +48,26 @@ describe('Path', function() {
             expect(path.isEmpty()).toBeFalse()
         })
     })
+
+    describe('for intersection', function() {
+        /** @type {Path} */
+        let anotherPath
+
+        beforeEach(function() {
+            path = new Path([10, 20, 15, 35, 50])
+            anotherPath = new Path([11, 20, 16, 35, 40])
+        })
+        it('it should find indexes', function() {
+            const intersection = path.intersectWith(anotherPath)
+            expect(intersection).toBeDefined()
+            expect(intersection).toHaveSize(2)
+            expect(intersection[0]).toEqual(20)
+            expect(intersection[1]).toEqual(35)        })
+        it('it should not find if undefined', function() {
+            expect(path.intersectWith()).toHaveSize(0)
+        })
+        it('it should not find if empty', function() {
+            expect(path.intersectWith(new Path())).toHaveSize(0)
+        })
+    })
 })

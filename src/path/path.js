@@ -28,6 +28,25 @@ class Path {
         return undefined
     }
 
+    intersectWith(
+        /** @type {Path} */
+        anotherPath
+    ) {
+        /** @type {number[]} */
+        const indexes = []
+        if (!anotherPath || anotherPath.isEmpty() || this.isEmpty()) {
+            return indexes
+        }
+        for (const myIndex of this.indexes) {
+            for (const anotherIndex of anotherPath.indexes) {
+                if (myIndex === anotherIndex) {
+                    indexes.push(myIndex)
+                }
+            }
+        }
+        return indexes
+    }
+
     isEmpty() {
         return !this.indexes || this.indexes.length === 0
     }

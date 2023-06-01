@@ -59,8 +59,6 @@ describe('Fast close slow far strategy', function() {
             cells.length,
             opponentBases
         )
-        /** create strategy */
-        strategy = new Strategy(state)
     })
 
     describe('Empty state', function() {
@@ -73,6 +71,8 @@ describe('Fast close slow far strategy', function() {
                 0,
                 []
             )
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should wait', function() {
             const actions = strategy.process(state)
@@ -85,6 +85,8 @@ describe('Fast close slow far strategy', function() {
             state.nbBases = 0
             state.myBases = []
             state.opponentBases = []
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should wait', function() {
             const actions = strategy.process(state)
@@ -94,6 +96,12 @@ describe('Fast close slow far strategy', function() {
 
     describe('No crystal state', function() {
         beforeEach(function() {
+            state.cells[17].resources = 0
+            state.cells[18].resources = 0
+            state.cells[21].resources = 0
+            state.cells[22].resources = 0
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should wait', function() {
             const actions = strategy.process(state)
@@ -103,6 +111,8 @@ describe('Fast close slow far strategy', function() {
 
     describe('Initial state', function() {
         beforeEach(function() {
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should set the correct beacons', function() {
             const actions = strategy.process(state)
@@ -125,6 +135,8 @@ describe('Fast close slow far strategy', function() {
             state.cells[17].resources = 2 // supposed opponent has recolted its closest resource as well
             state.cells[18].resources = 0
             // so we should focus now on 21 and 22 because 21 has more resources than 17 for the same distance
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should set the correct beacons', function() {
             const actions = strategy.process(state)
@@ -151,6 +163,8 @@ describe('Fast close slow far strategy', function() {
             state.cells[21].resources = 21
             // so we should focus now on 21 and 22 because 21 has more resources than 17 for the same distance
             // cannot get 21 or 11 (21 / 2) crystals at once so the number of ants should be optimized to be near 7 (21 / 3)
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should set the correct beacons', function() {
             const actions = strategy.process(state)
@@ -175,12 +189,40 @@ describe('Fast close slow far strategy', function() {
             state.cells[17].resources = 0
             state.cells[18].resources = 0
             state.cells[21].resources = 0
+            /** create strategy */
+            strategy = new Strategy(state)
         })
         it('should set the correct beacons', function() {
             const actions = strategy.process(state)
             const expectedActions =
                 'BEACON 1 1;' +
                 'BEACON 0 1;' +
+                'BEACON 3 1;' +
+                'BEACON 11 1;' +
+                'BEACON 19 1;' +
+                'BEACON 29 1;' +
+                'BEACON 22 1';
+                expect(actions).withContext('Strategy actions').toEqual(expectedActions)
+        })
+    })
+
+    describe('With resources on the same path', function() {
+        beforeEach(function() {
+            // add a resource on 0
+            // the closest should be 1 - 0
+            // the farest should be 1 - 0 - 3 - 11 - 19 - 29 - 22
+            // strengh and beacon should manage case where cells are in both paths
+            state.cells[0].type = 2
+            state.cells[0].resources = 16
+            state.crystals.push(0)
+            /** create strategy */
+            strategy = new Strategy(state)
+        })
+        it('should set the correct beacons', function() {
+            const actions = strategy.process(state)
+            const expectedActions =
+                'BEACON 1 3;' +
+                'BEACON 0 3;' +
                 'BEACON 3 1;' +
                 'BEACON 11 1;' +
                 'BEACON 19 1;' +

@@ -1,7 +1,33 @@
+import ActionBuilder from '../../action/action-builder.js'
 import * as Logger from '../../util/logger.js'
 import PathsToCrystals from '../../path/path-to-crystals.js'
 import Path from '../../path/path.js'
 import State from '../../state/state.js'
+
+function updateNbAnts(
+    /** @type {State} */
+    state,
+    /** @type {BaseInfo[]} */
+    bases
+) {
+    if (!bases) {
+        return []
+    }
+    if (!state) {
+        return bases
+    }
+    return bases.map(base => {
+        const baseCell = state.getCell(base.index)
+        return new BaseInfo(
+            base.index,
+            base.closePath,
+            base.closeStrength,
+            base.farPath,
+            base.farStrength,
+            baseCell && baseCell.myAnts > base.nbAnts ? baseCell.myAnts : base.nbAnts
+        )
+    })
+}
 
 /**
  * @returns {boolean}
@@ -64,7 +90,10 @@ function removeInvalidPaths(
         return new BaseInfo(
             base.index,
             isPathValid(state, base.closePath) ? base.closePath : undefined,
-            isPathValid(state, base.farPath) ? base.farPath : undefined
+            base.closeStrength,
+            isPathValid(state, base.farPath) ? base.farPath : undefined,
+            base.farStrength,
+            base.nbAnts
         )
     })
 }
@@ -83,43 +112,72 @@ function updatePaths(
         paths = paths.filter(path => path.getTargetIndex() !== closePath?.getTargetIndex())
         const farPath = getFarPath(base, paths)
         paths = paths.filter(path => path.getSourceIndex() !== base.index && path.getTargetIndex() !== farPath?.getTargetIndex())
-        return new BaseInfo(base.index, closePath, farPath)
+        const closeStrength = computeClosePathStrength(state, base.nbAnts, closePath, farPath)
+        return new BaseInfo(base.index, closePath, closeStrength, farPath, 1, base.nbAnts)
     })
 }
 
-function addBeaconActions(
+function computeClosePathStrength(
+    /** @type {State} */
+    state,
+    /** @type {number} */
+    nbAnts,
     /** @type {Path} */
-    path,
-    /** @type {string} */
-    initialActions
+    closePath,
+    /** @type {Path} */
+    farPath
 ) {
-    let actions = initialActions
-    const strength = 1
-    if (!path || path.isEmpty()) {
-        return actions
+    if (!nbAnts
+        || !closePath || closePath.isEmpty()
+        || !farPath || farPath.isEmpty()) {
+        return 1
     }
-    for (const index of path.indexes) {
-        if (actions.length > 0) {
-            actions += ';'
+    const targetCell = state.getCell(closePath.getTargetIndex())
+    if (!targetCell || !targetCell.resources) {
+        return 1
+    }
+    /** @type {number[]} */
+    const antsByCellSimulation = []
+    const minStrength = 1
+    const maxStrength = 10
+    const closeLength = closePath.length
+    const farLength = farPath.length
+    const commonLength = closePath.intersectWith(farPath).length
+    // compute how many ants it can be by cell depending of the chosen strength
+    for (let strength=minStrength; strength<=maxStrength; strength++) {
+        const virtualLength = (strength * closeLength) + farLength - commonLength
+        const antsByUnit = nbAnts / virtualLength
+        antsByCellSimulation[strength] = Math.floor(antsByUnit * strength)
+    }
+    // then fine the best strength to collect the resource in the minimum turn with the minimal strength possible
+    // in order to have a maximum of ants in the far path
+    /** @type {number | null} */
+    let chosenStrength = null
+    for (let nbTurns = 1; nbTurns <= 100 && chosenStrength === null; nbTurns++) {
+        const resourcesByTurn = Math.ceil(targetCell.resources / nbTurns)
+        for (let strength=minStrength; strength<=maxStrength; strength++) {
+            if (antsByCellSimulation[strength] >= resourcesByTurn) {
+                chosenStrength = strength
+                break
+            }
         }
-        actions += 'BEACON ' + index + ' ' + strength
     }
-    return actions
+    if (chosenStrength === null) {
+        return 1
+    }
+    return chosenStrength
 }
 
 function getActions(
     /** @type {BaseInfo[]} */
     bases
 ) {
-    let actions = ''
+    const builder = new ActionBuilder()
     for (const base of bases) {
-        actions = addBeaconActions(base.closePath, actions)
-        actions = addBeaconActions(base.farPath, actions)
+        builder.addBeacons(base.closePath, base.closeStrength)
+        builder.addBeacons(base.farPath, base.farStrength)
     }
-    if (actions.length === 0) {
-        actions = 'WAIT'
-    }
-    return actions
+    return builder.build()
 }
 
 class BaseInfo {
@@ -128,12 +186,21 @@ class BaseInfo {
         index,
         /** @type {Path | undefined} */
         closePath,
+        /** @type {number} */
+        closeStrenght,
         /** @type {Path | undefined} */
-        farPath
+        farPath,
+        /** @type {number} */
+        farStrength,
+        /** @type {number} */
+        nbAnts
     ) {
         this.index = index
         this.closePath = closePath
+        this.closeStrength = closeStrenght ?? 1
         this.farPath = farPath
+        this.farStrength = farStrength ?? 1
+        this.nbAnts = nbAnts ?? 0
     }
 }
 
@@ -157,6 +224,8 @@ class Strategy {
         /** @type {State} */
         state
     ){
+        // update nb ants by base
+        this.bases = updateNbAnts(state, this.bases)
         // keep the initial targets between rounds until resources are empty
         this.bases = removeInvalidPaths(state, this.bases)
         // find paths to collect resources
