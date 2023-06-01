@@ -47,7 +47,7 @@ function arePathsReached(
     if (!state) {
         return false
     }
-    const maxNbPaths = Math.min(3, state.getAvailableCrystalCells().length)
+    const maxNbPaths = Math.min(4, state.getAvailableCrystalCells().length)
     return paths.every(path => {
         const target = state.getCell(path?.getTargetIndex())
         return target === undefined || target.myAnts > 0
