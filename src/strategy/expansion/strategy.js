@@ -1,4 +1,5 @@
 import ActionBuilder from '../../action/action-builder.js'
+import Cell from '../../state/cell.js'
 import * as Logger from '../../util/logger.js'
 import Path from '../../path/path.js'
 import ShortestPath from '../../path/shortest-path.js'
@@ -46,10 +47,11 @@ function arePathsReached(
     if (!state) {
         return false
     }
+    const maxNbPaths = Math.min(3, state.getAvailableCrystalCells().length)
     return paths.every(path => {
         const target = state.getCell(path?.getTargetIndex())
         return target === undefined || target.myAnts > 0
-    })
+    }) && paths.length < maxNbPaths
 }
 
 function compare(
@@ -160,10 +162,15 @@ function findPriorityPath(
     /** @type {State} */
     state,
     /** @type {Path[]} */
-    paths
+    paths,
+    /** @type {Path | undefined} */
+    priorityPath    
 ) {
     if (!state || !paths || paths.length === 0) {
         return
+    }
+    if (priorityPath && paths.some(path => path.equals(priorityPath))) {
+        return priorityPath
     }
     const targets = paths.map(path => {
         const targetCell = state.getCell(path.getTargetIndex())
@@ -216,6 +223,8 @@ function getActions(
 class Strategy {
     /** @type {Path[]} */
     paths = []
+    /** @type {Path | undefined} */
+    priorityPath
 
     process(
         /** @type {State} */
@@ -234,10 +243,12 @@ class Strategy {
         // combine all paths indexes and remove duplicates
         const indexesWithStrength = getIndexesWithDefaultStrength(this.paths)
         // define the more interesting target and compute its path strengh (others are at 1)
-        const priorityPath = findPriorityPath(state, this.paths)
-        if (priorityPath) {
-            const targetCell = state.getCell(priorityPath.getTargetIndex())
-            updateIndexesStrength(indexesWithStrength, priorityPath, targetCell.resources, state.myNbAnts)
+        this.priorityPath = findPriorityPath(state, this.paths, this.priorityPath)
+        if (this.priorityPath) {
+            const targetCell = state.getCell(this.priorityPath.getTargetIndex())
+            if (targetCell.isEggs()) { // only prioritize eggs
+                updateIndexesStrength(indexesWithStrength, this.priorityPath, targetCell.resources, state.myNbAnts)
+            }
         }
         // generate the actions
         return getActions(indexesWithStrength)

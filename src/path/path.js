@@ -8,6 +8,24 @@ class Path {
 
     get length() { return this.indexes?.length ?? 0 }
 
+    equals(
+        /** @type {Path | undefined} */
+        anotherPath
+    ) {
+        if (!anotherPath) {
+            return false
+        }
+        if (this.length !== anotherPath.length) {
+            return false
+        }
+        for (let i=0; i < this.length; i++) {
+            if (this.indexes[i] !== anotherPath.indexes[i]) {
+                return false
+            }
+        }
+        return true
+    }
+
     /**
      * @returns {number | undefined}
      */
