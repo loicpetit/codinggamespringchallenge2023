@@ -6,12 +6,14 @@ function readBases(
     /** @type {number} */
     nbBases
 ) {
+    // console.error('read ' + nbBases + ' bases:')
     /** @type {Base[]} */
     const bases = []
     // @ts-ignore
     var inputs = readline().split(' ');
     for(let i = 0; i < nbBases; i++) {
         const baseIndex = parseInt(inputs[i]);
+        // console.error(baseIndex)
         bases.push(new Base(
             baseIndex
         ))
@@ -33,6 +35,7 @@ function readInitialCells(
     /** @type {number} */
     nbCells
 ) {
+    // console.error('read ' + nbCells + ' initial cells:')
     /** @type {Cell[]} */
     const cells = []
     for(let i = 0; i < nbCells; i++) {
@@ -48,6 +51,7 @@ function readInitialCells(
         const left = parseInt(inputs[5])
         const bottomLeft = parseInt(inputs[6])
         const bottomRight = parseInt(inputs[7])
+        // console.error('new Cell(' + i + ', ' + resources + ', ' + type + ', ' + myAnts + ', ' + opponentAnts + ', ' + right + ', ' + topRight + ', ' + topLeft + ', ' + left + ', ' + bottomLeft + ', ' + bottomRight + ')')
         cells.push(new Cell(
             i,
             resources,
@@ -69,6 +73,7 @@ function readTurnCells(
     /** @type {Cell[]} */
     currentCells
 ) {
+    // console.error('read ' + currentCells.length + ' turn cells:')
     /** @type {Cell[]} */
     const cells = []
     for(let i = 0; i < currentCells.length; i++) {
@@ -78,6 +83,7 @@ function readTurnCells(
         const resources = parseInt(inputs[0])
         const myAnts = parseInt(inputs[1]);
         const opponentAnts = parseInt(inputs[2]);
+        // console.error('new Cell(' + currentCell.index + ', ' + resources + ', ' + currentCell.type + ', ' + myAnts + ', ' + opponentAnts + ', ' + currentCell.right + ', ' + currentCell.topRight + ', ' + currentCell.topLeft + ', ' + currentCell.left + ', ' + currentCell.bottomLeft + ', ' + currentCell.bottomRight + ')')
         cells.push(new Cell(
             currentCell.index,
             resources,

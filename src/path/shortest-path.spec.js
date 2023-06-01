@@ -19,9 +19,12 @@ describe('ShortestPath', function() {
                 [],
                 [],
                 [],
+                [],
                 0,
                 0,
-                []
+                0,
+                [],
+                0
             )
         })
         it('should not return any path', function() {
@@ -69,6 +72,7 @@ describe('ShortestPath', function() {
                 new Cell(30, 0,  0, 0,  0,  -1, 21, -1, 20, 28, -1)
             ]
             const crystals = [17, 18, 21, 22]
+            const eggs = []
             const myBases = [
                 new Base(1)
             ]
@@ -78,10 +82,13 @@ describe('ShortestPath', function() {
             state = new State(
                 cells,
                 crystals,
+                eggs,
                 myBases,
+                0,
                 myBases.length,
                 cells.length,
-                opponentBases
+                opponentBases,
+                0
             )
         })
         it('should get the shortest path', function() {

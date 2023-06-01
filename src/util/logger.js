@@ -1,4 +1,9 @@
-var minLevel = 3
+const VERBOSE_LEVEL = 1
+const INFO_LEVEL = 2
+const WARNING_LEVEL = 3
+const ERROR_LEVEL = 4
+
+var minLevel = WARNING_LEVEL
 
 function setMinLevel(level){
     minLevel = level;
@@ -12,19 +17,19 @@ function log(level, type, category, msg){
 }
 
 function logVerbose(category, msg){
-    log(1, 'VERBOSE', category, msg)
+    log(VERBOSE_LEVEL, 'VERBOSE', category, msg)
 }
 
 function logInfo(category, msg){
-    log(2, 'INFO', category, msg)
+    log(INFO_LEVEL, 'INFO', category, msg)
 }
 
 function logWarning(category, msg){
-    log(3, 'WARNING', category, msg)
+    log(WARNING_LEVEL, 'WARNING', category, msg)
 }
 
 function logError(category, msg){
-    log(4, 'ERROR', category, msg)
+    log(ERROR_LEVEL, 'ERROR', category, msg)
 }
 
-export { setMinLevel, logVerbose, logInfo, logWarning, logError }
+export { VERBOSE_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, setMinLevel, logVerbose, logInfo, logWarning, logError }

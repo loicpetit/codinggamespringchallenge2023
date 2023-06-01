@@ -7,21 +7,30 @@ class State {
         cells,
         /** @type {number[]} */
         crystals,
+        /** @type {number[]} */
+        eggs,
         /** @type {Base[]} */
         myBases,
+        /** @type {number} */
+        myNbAnts,
         /** @type {number} */
         nbBases,
         /** @type {number} */
         nbCells,
         /** @type {Base[]} */
-        opponentBases
+        opponentBases,
+        /** @type {number} */
+        opponentNbAnts,
     ) {
         this.cells = cells ?? []
         this.crystals = crystals ?? []
+        this.eggs = eggs ?? []
         this.myBases = myBases ?? []
+        this.myNbAnts = myNbAnts ?? 0
         this.nbBases = nbBases ?? 0
         this.nbCells = nbCells ?? 0
         this.opponentBases = opponentBases ?? []
+        this.opponentNbAnts = opponentNbAnts ?? 0
     }
 
     getAvailableCrystalCells() {
@@ -40,10 +49,28 @@ class State {
             }
         }
         return crystalCells
-    }   
+    }
+
+    getAvailableEggsCells() {
+        /** @type {Cell[]} */
+        const eggsCells = []
+        for (const index of this.eggs) {
+            const cell = this.getCell(index)
+            if (!cell) {
+                throw new Error('Eggs index ' + index + ' does not exist')
+            }
+            if (!cell.isEggs()) {
+                throw new Error('Eggs are expected at index ' + index)
+            }
+            if (cell.hasEggs()) {
+                eggsCells.push(cell)
+            }
+        }
+        return eggsCells
+    }
 
     /**
-     * @returns {Cell | undefined} 
+     * @returns {Cell | undefined}
      */
     getCell(
         /** @type {number} */ index

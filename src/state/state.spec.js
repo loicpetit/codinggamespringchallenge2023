@@ -20,9 +20,12 @@ describe('State', function() {
                 ],
                 [1,2],
                 [],
+                [],
+                0,
                 0,
                 4,
-                []
+                [],
+                0
             )
         })
         it('should get the cells', function() {
@@ -64,9 +67,12 @@ describe('State', function() {
                 ],
                 [],
                 [],
+                [],
+                0,
                 0,
                 4,
-                []
+                [],
+                0
             )
         })
         it('should get cell', function() {
@@ -103,9 +109,12 @@ describe('State', function() {
                 ],
                 [],
                 [],
+                [],
+                0,
                 0,
                 5,
-                []
+                [],
+                0
             )
         })
         it('should get neighbours with one neighbour', function() {
@@ -153,9 +162,12 @@ describe('State', function() {
                 ],
                 [],
                 [],
+                [],
+                0,
                 0,
                 4,
-                []
+                [],
+                0
             )
         })
         it('should find index', function() {

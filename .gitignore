@@ -1,3 +1,6 @@
+# Office
+~*.xlsx
+
 # Logs
 logs
 *.log

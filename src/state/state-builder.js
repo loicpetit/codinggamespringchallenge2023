@@ -15,18 +15,33 @@ class StateBuilder {
     build() {
         /** @type {number[]} */
         const crystals = []
+        /** @type {number[]} */
+        const eggs = []
+        let myNbAnts = 0
+        let opponentNbAnts = 0
         for (const cell of this.cells) {
-            if (cell && cell.isCrystals()) {
+            if (!cell) {
+                continue
+            }
+            if (cell.isCrystals()) {
                 crystals.push(cell.index)
             }
+            if (cell.isEggs()) {
+                eggs.push(cell.index)
+            }
+            myNbAnts += cell.myAnts
+            opponentNbAnts += cell.opponentAnts
         }
         return new State(
             this.cells,
             crystals,
+            eggs,
             this.myBases,
+            myNbAnts,
             this.nbBases,
             this.nbCells,
-            this.opponentBases
+            this.opponentBases,
+            opponentNbAnts
         )
     }
 }

@@ -49,6 +49,31 @@ class ShortestPath {
         }
         return new Path(indexes)
     }
+
+    /**
+     * @returns {Path|undefined}
+     */
+    findFromSources(        
+        /** @type {State} */ state,
+        /** @type {Set<number>} */ sources,
+        /** @type {number} */ targetIndex,
+    ) {
+        if (!sources
+            || sources.size === 0
+        ) {
+            return
+        }
+        /** @type {Path|undefined} */
+        let path = undefined
+        // @ts-ignore
+        for (const sourceIndex of sources) {
+            const pathFromSource = this.find(state, sourceIndex, targetIndex)
+            if (pathFromSource && (path === undefined || path.length > pathFromSource.length)) {
+                path = pathFromSource
+            }
+        }
+        return path
+    }
 }
 
 export default ShortestPath
